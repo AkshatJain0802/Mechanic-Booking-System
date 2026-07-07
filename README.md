@@ -99,7 +99,7 @@ Mechanic Booking System/
 ## 🚀 Getting Started
 
 ### Prerequisites
-- **Node.js ≥ 22.5** (required for the built-in `node:sqlite` module)
+- **Node.js ≥ 24** (required for the built-in `node:sqlite` module)
 - **npm**
 
 ### Installation & local run
@@ -206,3 +206,4 @@ Back on Render, set `CORS_ORIGIN` to your Vercel domain (e.g. `https://your-app.
 ## 📄 License
 
 Released under the [MIT License](LICENSE).
+

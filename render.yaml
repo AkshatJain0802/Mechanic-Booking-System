@@ -11,7 +11,7 @@ services:
     healthCheckPath: /api/health
     envVars:
       - key: NODE_VERSION
-        value: "22.12.0"
+        value: "24.13.1"
       - key: JWT_SECRET
         generateValue: true # Render generates a strong secret automatically
       - key: CORS_ORIGIN
