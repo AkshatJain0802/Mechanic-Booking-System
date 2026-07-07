@@ -16,16 +16,26 @@ const app = express();
 const PORT = process.env.PORT ? Number(process.env.PORT) : 4000;
 
 // Allowed origins: comma-separated CORS_ORIGIN env (the deployed frontend URL)
-// plus localhost for development. If CORS_ORIGIN is unset, allow any origin.
-const allowedOrigins = process.env.CORS_ORIGIN
-  ? process.env.CORS_ORIGIN.split(",").map((o) => o.trim())
-  : null;
+// plus localhost for development. Matching is lenient — trailing slashes are
+// ignored and any *.vercel.app origin is allowed so preview deploys work too.
+const allowList = (process.env.CORS_ORIGIN ?? "")
+  .split(",")
+  .map((o) => o.trim().replace(/\/+$/, ""))
+  .filter(Boolean);
 
 app.use(
   cors({
-    origin: allowedOrigins
-      ? [...allowedOrigins, "http://localhost:5173"]
-      : true,
+    origin(origin, cb) {
+      // Non-browser clients (curl, server-to-server) send no Origin header.
+      if (!origin) return cb(null, true);
+      const normalized = origin.replace(/\/+$/, "");
+      const isAllowed =
+        allowList.length === 0 ||
+        allowList.includes(normalized) ||
+        normalized === "http://localhost:5173" ||
+        /\.vercel\.app$/.test(new URL(normalized).hostname);
+      cb(null, isAllowed);
+    },
     credentials: true,
   })
 );
