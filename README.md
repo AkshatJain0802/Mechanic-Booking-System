@@ -182,28 +182,14 @@ Base path: `/api`
 | `PATCH` | `/bookings/:id/status` | Update booking status | — |
 | `DELETE` | `/{resource}/:id` | Delete | Manager |
 
-## ☁️ Deployment
+## ☁️ Live Deployment
 
-The app deploys as two services. **Deploy the backend first**, then point the frontend at it.
+The app is live as two independently deployed services:
 
-### 1. Backend → Render
-1. Push this repo to GitHub.
-2. On [Render](https://render.com): **New → Blueprint**, select the repo. The included `render.yaml` provisions the API automatically.
-3. `JWT_SECRET` is generated automatically. After the frontend is live, set `CORS_ORIGIN` to your Vercel URL.
-4. Note the service URL, e.g. `https://mechanic-booking-api.onrender.com`.
+| Service | Platform | URL |
+|---------|----------|-----|
+| **Web app** | Vercel | **[mechanic-booking-system.vercel.app](https://mechanic-booking-system.vercel.app)** |
+| **REST API** | Render | **[mechanic-booking-api.onrender.com](https://mechanic-booking-api.onrender.com)** |
 
-> **Note:** Render's free tier uses an ephemeral filesystem — the SQLite database resets on redeploy/sleep. For persistent data, attach a Render Disk and set `DB_PATH` to a path on it.
-
-### 2. Frontend → Vercel
-1. On [Vercel](https://vercel.com): **Add New → Project**, import the repo.
-2. Set **Root Directory** to `client`.
-3. Add the environment variable `VITE_API_URL` = `https://<your-render-app>.onrender.com/api`.
-4. Deploy. Vercel auto-detects Vite and uses the included `vercel.json` for SPA routing.
-
-### 3. Connect them
-Back on Render, set `CORS_ORIGIN` to your Vercel domain (e.g. `https://your-app.vercel.app`) and save. Done.
-
-## 📄 License
-
-Released under the [MIT License](LICENSE).
+> **Note:** The API runs on Render's free tier, which sleeps after inactivity — the first request may take up to a minute while the server wakes up. The free tier's filesystem is also ephemeral, so sample data may reset on redeploy/sleep.
 
