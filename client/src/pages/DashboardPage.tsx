@@ -40,7 +40,7 @@ const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?:
 };
 
 export function DashboardPage() {
-  const { data: stats, isLoading } = useQuery({
+  const { data: stats, isLoading, isError, refetch, isFetching } = useQuery({
     queryKey: ["stats"],
     queryFn: statsApi.get,
     refetchInterval: 30000,
@@ -62,7 +62,28 @@ export function DashboardPage() {
     );
   }
 
-  const s = stats!;
+  if (isError || !stats) {
+    return (
+      <div className="flex flex-col items-center justify-center py-24 text-center">
+        <div className="w-12 h-12 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center mb-4">
+          <XCircle className="h-6 w-6 text-slate-400" />
+        </div>
+        <p className="text-slate-200 font-medium">Couldn't load dashboard data</p>
+        <p className="text-sm text-slate-500 mt-1 max-w-sm">
+          The API server may be waking up — free-tier servers sleep after inactivity and can take up to a minute to respond.
+        </p>
+        <button
+          onClick={() => refetch()}
+          disabled={isFetching}
+          className="mt-5 px-4 py-2 rounded-lg bg-accent/15 text-accent-hover text-sm font-medium border border-accent/20 hover:bg-accent/25 transition-colors disabled:opacity-50"
+        >
+          {isFetching ? "Retrying…" : "Retry"}
+        </button>
+      </div>
+    );
+  }
+
+  const s = stats;
 
   return (
     <div className="space-y-6">
